@@ -147,12 +147,12 @@
   <header>
     <div class="wrap">
       <h1><span>🐾</span><span>班级宠物园 · 在线试用</span></h1>
-      <div class="sub">静态演示 · 毛绒萌宠 1–10 级成长预览（只读）</div>
+      <div class="sub">静态演示 · 宠物 1–10 级成长预览（只读）</div>
     </div>
   </header>
   <main class="wrap">
     <div class="banner">
-      这是<strong>静态试用页</strong>：可看示例班级与全部毛绒宠物 1–10 级形态。不保存记分、不支持多账号登录。
+      这是<strong>静态试用页</strong>：可看示例班级与宠物图鉴 1–10 级形态。不保存记分、不支持多账号登录。
       完整可记分版本请用本机/Windows 安装包，或在机器人电脑上运行 <code>scripts/start-online-trial.sh</code>。
     </div>
     <div class="tabs">
@@ -214,6 +214,9 @@
       { id: 'samoyed', name: '萨摩耶' },
       { id: 'hamster', name: '仓鼠' },
       { id: 'winter-hamster', name: '银狐仓鼠' },
+      { id: 'electric-mouse', name: '雷电鼠' },
+      { id: 'pea-guard', name: '豌豆卫士' },
+      { id: 'phoenix-chick', name: '火凤雏' },
     ];
     const STUDENTS = [
       { name: '陈乐乐', pet: 'shiba', level: 1 },
@@ -265,7 +268,7 @@
       img.src = src(currentPet, currentLevel);
       img.style.transform = `scale(${scale(currentLevel)})`;
       document.getElementById('heroName').textContent = p.name;
-      document.getElementById('heroMeta').innerHTML = `Lv.${currentLevel} · <span class="ok">毛绒成长图</span>`;
+      document.getElementById('heroMeta').innerHTML = `Lv.${currentLevel} · <span class="ok">成长图</span>`;
     }
 
     let heroFxTimer = 0;

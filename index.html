@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>班级宠物园 · 在线试用</title>
+  <meta name="description" content="班级宠物园在线试用：查看毛绒萌宠 1–10 级成长与示例班级" />
+  <style>
+    :root {
+      --bg: #fff7ed;
+      --card: #ffffff;
+      --ink: #292524;
+      --muted: #78716c;
+      --accent: #f97316;
+      --accent2: #ec4899;
+      --line: #fed7aa;
+      --ok: #16a34a;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", system-ui, sans-serif;
+      color: var(--ink);
+      background: linear-gradient(160deg, #fff7ed 0%, #fdf2f8 45%, #f5f3ff 100%);
+      min-height: 100vh;
+    }
+    header {
+      position: sticky; top: 0; z-index: 10;
+      backdrop-filter: blur(10px);
+      background: rgba(255,247,237,.88);
+      border-bottom: 1px solid var(--line);
+      padding: 12px 16px;
+    }
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 16px; }
+    h1 { margin: 0; font-size: 1.35rem; display: flex; gap: .5rem; align-items: center; }
+    .sub { color: var(--muted); font-size: .9rem; margin-top: 4px; }
+    .banner {
+      margin: 16px 0;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      color: #92400e;
+      font-size: .92rem;
+      line-height: 1.5;
+    }
+    .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0 18px; }
+    .tab {
+      border: 0; border-radius: 999px; padding: 10px 16px; font-weight: 700;
+      background: #fff; color: #57534e; box-shadow: 0 1px 3px rgba(0,0,0,.06); cursor: pointer;
+    }
+    .tab.active {
+      color: #fff;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+    }
+    .panel { display: none; }
+    .panel.active { display: block; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 12px;
+    }
+    .card {
+      background: var(--card);
+      border-radius: 18px;
+      padding: 12px;
+      box-shadow: 0 8px 24px rgba(249,115,22,.08);
+      border: 1px solid #ffedd5;
+      text-align: center;
+    }
+    .stage {
+      height: 140px;
+      display: flex; align-items: flex-end; justify-content: center;
+      background: radial-gradient(circle at 50% 80%, #ffedd5, transparent 60%);
+      border-radius: 14px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+    .stage img {
+      max-height: 100%;
+      max-width: 100%;
+      object-fit: contain;
+      transform-origin: bottom center;
+      image-rendering: auto;
+    }
+    .name { font-weight: 700; }
+    .meta { color: var(--muted); font-size: .85rem; margin-top: 2px; }
+    .badge {
+      display: inline-block; margin-top: 6px; padding: 2px 8px; border-radius: 999px;
+      background: #ffedd5; color: #c2410c; font-size: .78rem; font-weight: 700;
+    }
+    .pet-list { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; }
+    .pet-chip {
+      flex: 0 0 auto; border: 1px solid #fdba74; background: #fff; border-radius: 14px;
+      padding: 8px 10px; cursor: pointer; min-width: 88px; text-align: center;
+    }
+    .pet-chip.active { background: #ffedd5; border-color: var(--accent); }
+    .pet-chip img { width: 56px; height: 56px; object-fit: contain; display: block; margin: 0 auto 4px; }
+    .levels { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0; }
+    .lv {
+      width: 40px; height: 40px; border-radius: 12px; border: 1px solid #fdba74;
+      background: #fff; font-weight: 800; cursor: pointer;
+    }
+    .lv.active { background: linear-gradient(135deg,#fb923c,#f472b6); color:#fff; border:0; }
+    .hero {
+      background: #fff; border-radius: 22px; padding: 16px; border: 1px solid #ffedd5;
+      display: grid; gap: 12px;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 720px) {
+      .hero { grid-template-columns: 1.2fr .8fr; align-items: center; }
+    }
+    .hero-stage {
+      height: min(52vw, 360px); display:flex; align-items:flex-end; justify-content:center;
+      background: radial-gradient(circle at 50% 85%, #fce7f3, transparent 55%);
+      border-radius: 18px;
+    }
+    .hero-stage img { max-height: 100%; max-width: 100%; object-fit: contain; transform-origin: bottom center; }
+    footer { color: var(--muted); font-size: .82rem; padding: 24px 16px 40px; text-align: center; line-height: 1.6; }
+    .ok { color: var(--ok); font-weight: 700; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1><span>🐾</span><span>班级宠物园 · 在线试用</span></h1>
+      <div class="sub">静态演示 · 毛绒萌宠 1–10 级成长预览（只读）</div>
+    </div>
+  </header>
+  <main class="wrap">
+    <div class="banner">
+      这是<strong>静态试用页</strong>：可看示例班级与全部毛绒宠物 1–10 级形态。不保存记分、不支持多账号登录。
+      完整可记分版本请用本机/Windows 安装包，或在机器人电脑上运行 <code>scripts/start-online-trial.sh</code>。
+    </div>
+    <div class="tabs">
+      <button class="tab active" data-tab="class">示例班级</button>
+      <button class="tab" data-tab="catalog">宠物图鉴</button>
+    </div>
+
+    <section id="panel-class" class="panel active">
+      <div class="grid" id="classGrid"></div>
+    </section>
+
+    <section id="panel-catalog" class="panel">
+      <div class="pet-list" id="petList"></div>
+      <div class="levels" id="levelBar"></div>
+      <div class="hero">
+        <div class="hero-stage"><img id="heroImg" alt="pet" /></div>
+        <div>
+          <div class="name" id="heroName" style="font-size:1.4rem"></div>
+          <div class="meta" id="heroMeta"></div>
+          <p class="sub" style="margin-top:10px">等级越高体型越大；陆地动物无翅膀、无皇冠。点击上方等级按钮切换 1–10 级。</p>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer>
+    试用数据为示例，非真实班级。<br />
+    Upstream 本地版路径：<code>/pet-garden/</code> · 静态试用托管于 GitHub Pages
+  </footer>
+  <script>
+    const PETS = [
+      { id: 'shiba', name: '柴犬' },
+      { id: 'golden-retriever', name: '金毛' },
+      { id: 'alpaca', name: '羊驼' },
+      { id: 'red-panda', name: '小熊猫' },
+      { id: 'call-duck', name: '柯尔鸭' },
+      { id: 'corgi', name: '柯基' },
+      { id: 'bichon', name: '比熊' },
+      { id: 'border-collie', name: '边牧' },
+      { id: 'orange-cat', name: '橘猫' },
+      { id: 'husky', name: '哈士奇' },
+      { id: 'angora-rabbit', name: '安哥拉兔' },
+      { id: 'west-highland', name: '西高地' },
+      { id: 'lop-rabbit', name: '垂耳兔' },
+      { id: 'persian-cat', name: '波斯猫' },
+      { id: 'ragdoll-cat', name: '布偶猫' },
+      { id: 'tabby-cat', name: '虎斑猫' },
+      { id: 'samoyed', name: '萨摩耶' },
+      { id: 'hamster', name: '仓鼠' },
+      { id: 'winter-hamster', name: '银狐仓鼠' },
+    ];
+    const STUDENTS = [
+      { name: '陈乐乐', pet: 'shiba', level: 1 },
+      { name: '林小雨', pet: 'golden-retriever', level: 2 },
+      { name: '张子涵', pet: 'alpaca', level: 3 },
+      { name: '刘一诺', pet: 'red-panda', level: 4 },
+      { name: '杨浩然', pet: 'call-duck', level: 5 },
+      { name: '赵欣怡', pet: 'corgi', level: 6 },
+      { name: '黄志强', pet: 'bichon', level: 7 },
+      { name: '周梦琪', pet: 'border-collie', level: 8 },
+      { name: '吴俊杰', pet: 'orange-cat', level: 9 },
+      { name: '徐若曦', pet: 'husky', level: 10 },
+      { name: '孙明轩', pet: 'angora-rabbit', level: 4 },
+      { name: '马晓婷', pet: 'west-highland', level: 7 },
+    ];
+    const petName = id => (PETS.find(p => p.id === id) || { name: id }).name;
+    const scale = level => 0.5 + 0.5 * (level - 1) / 9;
+    const src = (id, level) => `pets-transparent/${id}/lv${level}.png`;
+
+    function renderClass() {
+      const grid = document.getElementById('classGrid');
+      grid.innerHTML = STUDENTS.map(s => `
+        <article class="card">
+          <div class="stage"><img src="${src(s.pet, s.level)}" alt="${petName(s.pet)}" style="transform:scale(${scale(s.level)})" loading="lazy" /></div>
+          <div class="name">${s.name}</div>
+          <div class="meta">${petName(s.pet)}</div>
+          <span class="badge">Lv.${s.level}</span>
+        </article>
+      `).join('');
+    }
+
+    let currentPet = PETS[0].id;
+    let currentLevel = 1;
+    function renderCatalogChrome() {
+      document.getElementById('petList').innerHTML = PETS.map(p => `
+        <button class="pet-chip ${p.id===currentPet?'active':''}" data-pet="${p.id}">
+          <img src="${src(p.id, Math.min(5,10))}" alt="${p.name}" loading="lazy" />
+          ${p.name}
+        </button>`).join('');
+      document.getElementById('levelBar').innerHTML = Array.from({length:10}, (_,i)=>i+1).map(lv => `
+        <button class="lv ${lv===currentLevel?'active':''}" data-lv="${lv}">${lv}</button>`).join('');
+      document.querySelectorAll('[data-pet]').forEach(btn => btn.onclick = () => { currentPet = btn.dataset.pet; renderCatalog(); });
+      document.querySelectorAll('[data-lv]').forEach(btn => btn.onclick = () => { currentLevel = Number(btn.dataset.lv); renderCatalog(); });
+    }
+    function renderCatalog() {
+      renderCatalogChrome();
+      const p = PETS.find(x => x.id === currentPet);
+      const img = document.getElementById('heroImg');
+      img.src = src(currentPet, currentLevel);
+      img.style.transform = `scale(${scale(currentLevel)})`;
+      document.getElementById('heroName').textContent = p.name;
+      document.getElementById('heroMeta').innerHTML = `Lv.${currentLevel} · <span class="ok">毛绒成长图</span>`;
+    }
+
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.onclick = () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t===tab));
+        document.querySelectorAll('.panel').forEach(p => p.classList.toggle('active', p.id === 'panel-' + tab.dataset.tab));
+      };
+    });
+    renderClass();
+    renderCatalog();
+  </script>
+</body>
+</html>

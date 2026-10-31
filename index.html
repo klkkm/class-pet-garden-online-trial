@@ -111,11 +111,34 @@
       .hero { grid-template-columns: 1.2fr .8fr; align-items: center; }
     }
     .hero-stage {
-      height: min(52vw, 360px); display:flex; align-items:flex-end; justify-content:center;
+      position: relative; height: min(52vw, 360px); overflow: hidden; isolation: isolate;
       background: radial-gradient(circle at 50% 85%, #fce7f3, transparent 55%);
       border-radius: 18px;
     }
+    .hero-art { position: absolute; inset: 0; display: flex; align-items: flex-end; justify-content: center; pointer-events: none; }
+    .hero-prev { opacity: 0; }
     .hero-stage img { max-height: 100%; max-width: 100%; object-fit: contain; transform-origin: bottom center; }
+    .preview-level-up { margin-top: 12px; border: 0; border-radius: 999px; padding: 10px 18px; background: #f97316; color: #fff; font-weight: 800; cursor: pointer; }
+    .hero-stage.level-up { animation: demo-level-glow 400ms ease-out both; }
+    .hero-stage.level-up .hero-current { animation: demo-level-pop 540ms ease-out 240ms both; }
+    .hero-stage.level-up .hero-prev { animation: demo-level-prev 630ms ease-in-out 220ms both; }
+    .demo-sparkle { position: absolute; left: 50%; top: 46%; color: #f6ad24; font-size: 22px; line-height: 1; opacity: 0; pointer-events: none; text-shadow: 0 0 6px #fff; }
+    .hero-stage.level-up .demo-sparkle { animation: demo-level-sparkle 600ms ease-out var(--sparkle-delay) both; }
+    @keyframes demo-level-glow {
+      0%, 100% { box-shadow: inset 0 0 0 0 rgba(255,190,70,0); filter: brightness(1); }
+      35% { box-shadow: inset 0 0 0 3px rgba(255,183,55,.9), inset 0 0 34px rgba(255,196,82,.65); filter: brightness(1.08); }
+    }
+    @keyframes demo-level-pop { 0% { transform: scale(.92); } 65% { transform: scale(1.06); } 100% { transform: scale(1); } }
+    @keyframes demo-level-prev { 0%, 25% { opacity: 1; } 100% { opacity: 0; } }
+    @keyframes demo-level-sparkle {
+      0% { opacity: 0; transform: translate(-50%,-50%) scale(.25) rotate(0); }
+      20%, 75% { opacity: 1; }
+      100% { opacity: 0; transform: translate(-50%,-50%) translate(var(--sparkle-x),var(--sparkle-y)) scale(.85) rotate(110deg); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .hero-stage.level-up, .hero-stage.level-up .hero-current, .hero-stage.level-up .hero-prev, .hero-stage.level-up .demo-sparkle { animation: none; }
+      .hero-prev, .demo-sparkle { display: none; }
+    }
     footer { color: var(--muted); font-size: .82rem; padding: 24px 16px 40px; text-align: center; line-height: 1.6; }
     .ok { color: var(--ok); font-weight: 700; }
   </style>
@@ -145,11 +168,23 @@
       <div class="pet-list" id="petList"></div>
       <div class="levels" id="levelBar"></div>
       <div class="hero">
-        <div class="hero-stage"><img id="heroImg" alt="pet" /></div>
+        <div class="hero-stage" id="heroStage">
+          <div class="hero-art hero-prev" id="heroPrev"><img id="heroPrevImg" alt="" /></div>
+          <div class="hero-art hero-current"><img id="heroImg" alt="pet" /></div>
+          <span class="demo-sparkle" style="--sparkle-x:-52px;--sparkle-y:-35px;--sparkle-delay:180ms">✦</span>
+          <span class="demo-sparkle" style="--sparkle-x:-20px;--sparkle-y:-58px;--sparkle-delay:225ms">✦</span>
+          <span class="demo-sparkle" style="--sparkle-x:22px;--sparkle-y:-56px;--sparkle-delay:270ms">✦</span>
+          <span class="demo-sparkle" style="--sparkle-x:54px;--sparkle-y:-28px;--sparkle-delay:315ms">✦</span>
+          <span class="demo-sparkle" style="--sparkle-x:54px;--sparkle-y:20px;--sparkle-delay:360ms">✦</span>
+          <span class="demo-sparkle" style="--sparkle-x:20px;--sparkle-y:42px;--sparkle-delay:405ms">✦</span>
+          <span class="demo-sparkle" style="--sparkle-x:-22px;--sparkle-y:42px;--sparkle-delay:450ms">✦</span>
+          <span class="demo-sparkle" style="--sparkle-x:-54px;--sparkle-y:16px;--sparkle-delay:495ms">✦</span>
+        </div>
         <div>
           <div class="name" id="heroName" style="font-size:1.4rem"></div>
           <div class="meta" id="heroMeta"></div>
           <p class="sub" style="margin-top:10px">等级越高体型越大；陆地动物无翅膀、无皇冠。点击上方等级按钮切换 1–10 级。</p>
+          <button class="preview-level-up" id="previewLevelUp" type="button">试看升级</button>
         </div>
       </div>
     </section>
@@ -232,6 +267,22 @@
       document.getElementById('heroName').textContent = p.name;
       document.getElementById('heroMeta').innerHTML = `Lv.${currentLevel} · <span class="ok">毛绒成长图</span>`;
     }
+
+    let heroFxTimer = 0;
+    document.getElementById('previewLevelUp').onclick = () => {
+      const stage = document.getElementById('heroStage');
+      const prevImg = document.getElementById('heroPrevImg');
+      clearTimeout(heroFxTimer);
+      prevImg.src = src(currentPet, currentLevel);
+      prevImg.style.transform = `scale(${scale(currentLevel)})`;
+      currentLevel = currentLevel % 10 + 1;
+      renderCatalog();
+      stage.classList.remove('level-up');
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      void stage.offsetWidth;
+      stage.classList.add('level-up');
+      heroFxTimer = setTimeout(() => stage.classList.remove('level-up'), 1100);
+    };
 
     document.querySelectorAll('.tab').forEach(tab => {
       tab.onclick = () => {
